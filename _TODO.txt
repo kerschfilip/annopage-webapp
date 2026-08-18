@@ -1,0 +1,3 @@
+- generuje to i použité prompty?
+- mazání dat z web app (a zobrazení jejich velikiosti) - platí i annopage
+- issue: možnost vidět enginy

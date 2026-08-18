@@ -1,0 +1,79 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: annopage_db
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  annopage-api:
+    build:
+      context: ./docker
+      dockerfile: api.Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/annopage_db
+      BASE_DIR: /data
+    volumes:
+      - api_data:/data
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  annopage-worker:
+    build:
+      context: ./docker
+      dockerfile: worker.Dockerfile
+    depends_on:
+      annopage-api:
+        condition: service_healthy
+    environment:
+      # Persisted under the same /data volume, so a HUGGINGFACE_IMAGE_EMBEDDING
+      # step doesn't re-download its model from the Hub on every restart.
+      HF_HOME: /data/hf-cache
+    command:
+      - annopage_worker
+      - --api-url=http://annopage-api:8000
+      - --api-key=annopage.testworkerkid.testworkerkey
+      - --base-dir=/data
+      - --device=cpu
+      # DEBUG, not INFO: AnnoPageWorker.process_job (AnnoPage/api/worker.py)
+      # only logs the annopage subprocess's stdout/stderr at DEBUG level when
+      # it exits 0 - at INFO you get no visibility into what actually ran,
+      # even when something silently produced no output.
+      - --logging-level=DEBUG
+    volumes:
+      - worker_data:/data
+
+  annopage-webapp:
+    build:
+      context: .
+      dockerfile: docker/webapp.Dockerfile
+    depends_on:
+      annopage-api:
+        condition: service_healthy
+    environment:
+      INPUT_ROOT: /data
+    ports:
+      - "8080:8000"
+    volumes:
+      - ./data:/app/data
+      - ./input-data:/data:ro
+
+volumes:
+  pg_data:
+  api_data:
+  worker_data:

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Historie úloh – AnnoPage runner{% endblock %}
+{% block content %}
+<h1>Historie úloh</h1>
+{% if not jobs %}
+<p>Zatím žádné úlohy.</p>
+{% else %}
+<table>
+    <thead>
+        <tr><th>Vytvořeno</th><th>Target</th><th>Engine</th><th>Vstup</th><th>Stav</th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for job in jobs %}
+        <tr>
+            <td>{{ job.created_at }}</td>
+            <td>{{ job.target_label }}</td>
+            <td>{{ job.engine_name or "výchozí" }}</td>
+            <td><code>{{ job.input_path }}</code></td>
+            <td><span class="state state-{{ job.state }}">{{ job.state }}</span></td>
+            <td><a href="/jobs/{{ job.id }}">detail</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock %}

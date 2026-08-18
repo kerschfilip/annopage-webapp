@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Job {{ job.id }} – AnnoPage runner{% endblock %}
+{% block content %}
+<h1>Úloha <code>{{ job.id }}</code></h1>
+<div id="job-detail" data-job-id="{{ job.id }}">
+    <p>Target: <strong>{{ job.target_label }}</strong></p>
+    <p>Vstup: <code>{{ job.input_path }}</code></p>
+    <p>Výstup: <code>{{ job.output_dir }}</code></p>
+    <p>Stav: <span id="job-state" class="state state-{{ job.state }}">{{ job.state }}</span></p>
+    <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+    <p id="job-error" class="error"></p>
+    <a id="download-link" href="/api/jobs/{{ job.id }}/download" style="display:none">Stáhnout výstup (zip)</a>
+    <details>
+        <summary>Log</summary>
+        <pre id="job-log"></pre>
+    </details>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/static/job_detail.js"></script>{% endblock %}

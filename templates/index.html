@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Nová úloha – AnnoPage runner{% endblock %}
+{% block content %}
+<h1>Nová úloha</h1>
+
+{% if not targets %}
+<p class="notice">Nemáte žádný uložený target. <a href="/settings">Přidejte ho v nastavení</a> předtím, než spustíte úlohu.</p>
+{% endif %}
+
+<form id="job-form">
+    <fieldset>
+        <legend>Vstupní složka</legend>
+        <div id="input-picker"></div>
+        <label>
+            Cesta ke složce s podsložkami <code>images/</code>, volitelně <code>alto_xmls/</code> a <code>metadata.json</code>
+            <input type="text" id="input_path" name="input_path" placeholder="/data/klient/20260611-test/input" required>
+        </label>
+        <button type="button" id="inspect-btn">Ověřit obsah</button>
+        <div id="inspect-result"></div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Target</legend>
+        <label>
+            Cílová instance
+            <select id="target_id" name="target_id" required>
+                <option value="" disabled selected>-- vyberte --</option>
+                {% for t in targets %}
+                <option value="{{ t.id }}">{{ t.label }} ({{ t.api_url }})</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            Engine (nepovinné, jinak výchozí)
+            <select id="engine_name" name="engine_name">
+                <option value="">-- výchozí --</option>
+            </select>
+        </label>
+        <p id="engine-description" class="notice" style="display:none"></p>
+    </fieldset>
+
+    <fieldset>
+        <legend>Výstupy</legend>
+        <label><input type="checkbox" name="output_alto" checked> ALTO XML</label>
+        <label><input type="checkbox" name="output_embeddings" checked> Embeddings</label>
+        <label><input type="checkbox" name="output_embeddings_jsonlines"> Embeddings (JSONL)</label>
+        <label><input type="checkbox" name="output_renders" checked> Renders</label>
+        <label><input type="checkbox" name="output_crops" checked> Crops</label>
+        <label><input type="checkbox" name="output_image_captioning_prompts"> Captioning prompty</label>
+    </fieldset>
+
+    <fieldset>
+        <legend>Captioning profil (nepovinné)</legend>
+        <select id="captioning_profile_id" name="captioning_profile_id">
+            <option value="">-- žádný --</option>
+            {% for p in profiles %}
+            <option value="{{ p.id }}">{{ p.label }}</option>
+            {% endfor %}
+        </select>
+    </fieldset>
+
+    <fieldset>
+        <legend>Výstupní složka (nepovinné)</legend>
+        <label>
+            Necháte-li prázdné, výstup se uloží do vlastního úložiště appky.
+            <input type="text" id="output_path" name="output_path" placeholder="/Users/.../output/runs/...">
+        </label>
+    </fieldset>
+
+    <button type="submit">Spustit úlohu</button>
+</form>
+{% endblock %}
+{% block scripts %}<script src="/static/new_job.js"></script>{% endblock %}

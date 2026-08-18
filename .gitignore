@@ -1,0 +1,6 @@
+data/
+input-data/*
+!input-data/.gitkeep
+__pycache__/
+*.pyc
+.venv/

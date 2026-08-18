@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}AnnoPage runner{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="topnav">
+        <a href="/" class="brand">AnnoPage runner</a>
+        <a href="/">Nová úloha</a>
+        <a href="/jobs">Historie</a>
+        <a href="/settings">Nastavení</a>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <script src="/static/app.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

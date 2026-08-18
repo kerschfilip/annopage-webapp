@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Nastavení – AnnoPage runner{% endblock %}
+{% block content %}
+<h1>Nastavení</h1>
+
+<section>
+    <h2>Targety</h2>
+    <table>
+        <thead><tr><th>Label</th><th>API URL</th><th>API klíč</th><th></th></tr></thead>
+        <tbody id="targets-table">
+            {% for t in targets %}
+            <tr data-id="{{ t.id }}">
+                <td>{{ t.label }}</td>
+                <td>{{ t.api_url }}</td>
+                <td><code>{{ t.api_key }}</code></td>
+                <td><button class="delete-target" data-id="{{ t.id }}">smazat</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form id="target-form">
+        <input type="text" name="label" placeholder="Label, např. 'lokální'" required>
+        <input type="text" name="api_url" placeholder="http://localhost:8000" required>
+        <input type="text" name="api_key" placeholder="API klíč" required>
+        <button type="submit">Přidat target</button>
+    </form>
+</section>
+
+<section>
+    <h2>Captioning profily</h2>
+    <table>
+        <thead><tr><th>Label</th><th></th></tr></thead>
+        <tbody id="profiles-table">
+            {% for p in profiles %}
+            <tr data-id="{{ p.id }}">
+                <td>{{ p.label }}</td>
+                <td><button class="delete-profile" data-id="{{ p.id }}">smazat</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form id="profile-form">
+        <input type="text" name="label" placeholder="Label, např. 'gpt-4.1-mini'" required>
+        <textarea name="settings" rows="10" placeholder="Obsah IMAGE_CAPTIONING_SETTINGS.json" required></textarea>
+        <button type="submit">Přidat profil</button>
+    </form>
+</section>
+
+<section>
+    <h2>Registrované enginy</h2>
+    <p class="notice">
+        Toto je lokální záznam toho, co zaregistroval <code>scripts/register_engine.py</code> —
+        DocAPI samo o sobě neumí obsah enginu zpětně vrátit (ani administrátorům), takže tohle
+        nemusí odpovídat úplně všem enginům na daném targetu, jen těm zaregistrovaným odsud.
+    </p>
+    {% if not engine_registry %}
+    <p>Zatím žádný engine nebyl přes tento skript zaregistrován.</p>
+    {% else %}
+    {% for e in engine_registry %}
+    <details>
+        <summary>
+            <strong>{{ e.name }}</strong> v{{ e.version }}
+            {% if e.default %}<span class="state state-done">default</span>{% endif %}
+            — {{ e.description }}
+            <br><small>{{ e.target_api_url }} · zaregistrováno {{ e.registered_at }}</small>
+        </summary>
+        <pre>{{ e.config_ini }}</pre>
+    </details>
+    {% endfor %}
+    {% endif %}
+</section>
+{% endblock %}
+{% block scripts %}<script src="/static/settings.js"></script>{% endblock %}
