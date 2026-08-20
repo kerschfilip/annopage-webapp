@@ -7,14 +7,16 @@
 {% else %}
 <table>
     <thead>
-        <tr><th>Vytvořeno</th><th>Target</th><th>Engine</th><th>Vstup</th><th>Stav</th><th></th></tr>
+        <tr><th>Job ID</th><th>Vytvořeno</th><th>Target</th><th>Engine</th><th>Captioning profil</th><th>Vstup</th><th>Stav</th><th></th></tr>
     </thead>
     <tbody>
         {% for job in jobs %}
         <tr>
+            <td><code>{{ job.id }}</code></td>
             <td>{{ job.created_at }}</td>
             <td>{{ job.target_label }}</td>
             <td>{{ job.engine_name or "výchozí" }}</td>
+            <td>{{ job.captioning_profile_label or "žádný" }}</td>
             <td><code>{{ job.input_path }}</code></td>
             <td><span class="state state-{{ job.state }}">{{ job.state }}</span></td>
             <td><a href="/jobs/{{ job.id }}">detail</a></td>

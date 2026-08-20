@@ -168,6 +168,27 @@ def log_file(job_id: str) -> Path:
     return job_dir(job_id) / "run.log"
 
 
+def tail_log(job_id: str, lines: int = 5) -> str:
+    """Return the last `lines` lines of a job's log, without reading the
+    whole file - a job over thousands of images can produce a log too large
+    to load into a browser tab on every poll."""
+    path = log_file(job_id)
+    if not path.is_file():
+        return ""
+    block_size = 8192
+    data = b""
+    with open(path, "rb") as f:
+        f.seek(0, os.SEEK_END)
+        remaining = f.tell()
+        while remaining > 0 and data.count(b"\n") <= lines:
+            read_size = min(block_size, remaining)
+            remaining -= read_size
+            f.seek(remaining)
+            data = f.read(read_size) + data
+    text = data.decode("utf-8", errors="replace")
+    return "\n".join(text.splitlines()[-lines:])
+
+
 def create_job(**fields) -> dict:
     job_id = str(uuid.uuid4())
     job = {

@@ -197,6 +197,7 @@ async def api_create_job(request: Request):
             store.update_job(job["id"], state="failed", error="Zvolený captioning profil neexistuje.")
             raise HTTPException(400, "Zvolený captioning profil neexistuje.")
         changes["captioning_settings_path"] = job_runner.write_captioning_settings(job["id"], profile["settings"])
+        changes["captioning_profile_label"] = profile["label"]
 
     job = store.update_job(job["id"], **changes)
     job_runner.start_job(job["id"])
@@ -204,15 +205,11 @@ async def api_create_job(request: Request):
 
 
 @app.get("/api/jobs/{job_id}/log")
-def api_job_log(job_id: str):
+def api_job_log(job_id: str, lines: int = 5):
     job = store.get_job(job_id)
     if job is None:
         raise HTTPException(404, "Job nenalezen.")
-    log_path = store.log_file(job_id)
-    if not log_path.is_file():
-        return {"log": ""}
-    with open(log_path, "r", encoding="utf-8") as f:
-        return {"log": f.read()}
+    return {"log": store.tail_log(job_id, lines)}
 
 
 @app.get("/api/jobs/{job_id}/download")
