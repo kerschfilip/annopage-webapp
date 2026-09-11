@@ -15,11 +15,11 @@ targetForm.addEventListener("submit", async (event) => {
         const row = document.createElement("tr");
         row.dataset.id = target.id;
         row.innerHTML = `<td>${target.label}</td><td>${target.api_url}</td><td><code>${target.api_key}</code></td>
-            <td><button class="delete-target" data-id="${target.id}">smazat</button></td>`;
+            <td><button class="delete-target" data-id="${target.id}">${I18N["common.delete"]}</button></td>`;
         targetsTable.appendChild(row);
         targetForm.reset();
     } catch (e) {
-        alert(`Nepodařilo se přidat target: ${e.message}`);
+        alert(`${I18N["settings.add_target_failed"]}: ${e.message}`);
     }
 });
 
@@ -37,7 +37,7 @@ profileForm.addEventListener("submit", async (event) => {
     try {
         settings = JSON.parse(data.settings);
     } catch (e) {
-        alert("Settings musí být validní JSON.");
+        alert(I18N["settings.invalid_json"]);
         return;
     }
     try {
@@ -48,11 +48,11 @@ profileForm.addEventListener("submit", async (event) => {
         });
         const row = document.createElement("tr");
         row.dataset.id = profile.id;
-        row.innerHTML = `<td>${profile.label}</td><td><button class="delete-profile" data-id="${profile.id}">smazat</button></td>`;
+        row.innerHTML = `<td>${profile.label}</td><td><button class="delete-profile" data-id="${profile.id}">${I18N["common.delete"]}</button></td>`;
         profilesTable.appendChild(row);
         profileForm.reset();
     } catch (e) {
-        alert(`Nepodařilo se přidat profil: ${e.message}`);
+        alert(`${I18N["settings.add_profile_failed"]}: ${e.message}`);
     }
 });
 

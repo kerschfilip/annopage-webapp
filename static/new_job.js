@@ -8,7 +8,7 @@ const form = document.getElementById("job-form");
 
 async function inspectPath(path) {
     inputPathField.value = path;
-    inspectResult.textContent = "Ověřuji...";
+    inspectResult.textContent = I18N["new_job.checking"];
     try {
         const result = await apiFetch("/api/input/inspect", {
             method: "POST",
@@ -16,9 +16,9 @@ async function inspectPath(path) {
             body: JSON.stringify({ path }),
         });
         if (result.ok) {
-            inspectResult.innerHTML = `<p class="notice">OK — ${result.images_count} obrázků` +
-                (result.alto_dir ? `, ALTO: ${result.alto_count} souborů` : ", bez ALTO") +
-                (result.metadata_path ? `, metadata.json: ${result.metadata_count ?? "?"} záznamů` : ", bez metadata.json") +
+            inspectResult.innerHTML = `<p class="notice">OK — ${result.images_count} ${I18N["new_job.images_word"]}` +
+                (result.alto_dir ? `, ALTO: ${result.alto_count} ${I18N["new_job.files_word"]}` : I18N["new_job.no_alto"]) +
+                (result.metadata_path ? `, metadata.json: ${result.metadata_count ?? "?"} ${I18N["new_job.records_word"]}` : I18N["new_job.no_metadata"]) +
                 `</p>`;
         } else {
             inspectResult.innerHTML = `<p class="error">${result.errors.join("<br>")}</p>`;
@@ -36,13 +36,13 @@ async function loadInputPicker() {
         const select = document.createElement("select");
         const placeholder = document.createElement("option");
         placeholder.value = "";
-        placeholder.textContent = `-- vybrat z ${result.root} (${result.candidates.length}) --`;
+        placeholder.textContent = `${I18N["new_job.pick_from_prefix"]} ${result.root} (${result.candidates.length}) --`;
         select.appendChild(placeholder);
 
         for (const c of result.candidates) {
             const opt = document.createElement("option");
             opt.value = c.path;
-            const flags = [`${c.images_count} obr.`, c.has_alto ? "ALTO" : null, c.has_metadata ? "metadata" : null]
+            const flags = [`${c.images_count} ${I18N["new_job.img_abbrev"]}`, c.has_alto ? "ALTO" : null, c.has_metadata ? "metadata" : null]
                 .filter(Boolean).join(", ");
             opt.textContent = `${c.relative_path} (${flags})`;
             select.appendChild(opt);
@@ -65,7 +65,7 @@ const engineDescriptionEl = document.getElementById("engine-description");
 let engineDescriptions = {};
 
 targetSelect.addEventListener("change", async () => {
-    engineSelect.innerHTML = '<option value="">-- výchozí --</option>';
+    engineSelect.innerHTML = `<option value="">${I18N["common.default_placeholder"]}</option>`;
     engineDescriptions = {};
     engineDescriptionEl.style.display = "none";
     if (!targetSelect.value) return;
@@ -81,7 +81,7 @@ targetSelect.addEventListener("change", async () => {
         if (result.error) {
             const opt = document.createElement("option");
             opt.disabled = true;
-            opt.textContent = `Nelze načíst engine: ${result.error}`;
+            opt.textContent = `${I18N["new_job.cannot_load_engine"]}: ${result.error}`;
             engineSelect.appendChild(opt);
         }
     } catch (e) {
@@ -125,6 +125,6 @@ form.addEventListener("submit", async (event) => {
         });
         window.location.href = `/jobs/${job.id}`;
     } catch (e) {
-        alert(`Nepodařilo se spustit úlohu: ${e.message}`);
+        alert(`${I18N["new_job.job_start_failed"]}: ${e.message}`);
     }
 });

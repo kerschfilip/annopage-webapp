@@ -1,18 +1,18 @@
 {% extends "base.html" %}
-{% block title %}Job {{ job.id }} – AnnoPage runner{% endblock %}
+{% block title %}Job {{ job.id }} – {{ t('brand') }}{% endblock %}
 {% block content %}
-<h1>Úloha <code>{{ job.id }}</code></h1>
+<h1>{{ t('job_detail.title_prefix') }} <code>{{ job.id }}</code></h1>
 <div id="job-detail" data-job-id="{{ job.id }}">
-    <p>Vytvořeno: <strong>{{ job.created_at }}</strong></p>
-    <p>Target: <strong>{{ job.target_label }}</strong></p>
-    <p>Vstup: <code>{{ job.input_path }}</code></p>
-    <p>Výstup: <code>{{ job.output_dir }}</code></p>
-    <p>Stav: <span id="job-state" class="state state-{{ job.state }}">{{ job.state }}</span></p>
+    <p>{{ t('job_detail.created_at_colon') }} <strong>{{ job.created_at }}</strong></p>
+    <p>{{ t('job_detail.target_colon') }} <strong>{{ job.target_label }}</strong></p>
+    <p>{{ t('job_detail.input_colon') }} <code>{{ job.input_path }}</code></p>
+    <p>{{ t('job_detail.output_colon') }} <code>{{ job.output_dir }}</code></p>
+    <p>{{ t('job_detail.state_colon') }} <span id="job-state" class="state state-{{ job.state }}">{{ job.state }}</span></p>
     <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
     <p id="job-error" class="error"></p>
-    <a id="download-link" href="/api/jobs/{{ job.id }}/download" style="display:none">Stáhnout výstup (zip)</a>
+    <a id="download-link" href="/api/jobs/{{ job.id }}/download" style="display:none">{{ t('job_detail.download') }}</a>
     <details open>
-        <summary>Log (posledních 5 řádků)</summary>
+        <summary>{{ t('job_detail.log_summary') }}</summary>
         <pre id="job-log"></pre>
     </details>
 </div>

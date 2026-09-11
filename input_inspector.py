@@ -6,6 +6,8 @@ import json
 import os
 from pathlib import Path
 
+import i18n
+
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".tif", ".tiff"}
 
 # In the Docker setup this is where docker-compose.yml bind-mounts host input
@@ -16,7 +18,8 @@ MAX_SCAN_DEPTH = 6
 MAX_CANDIDATES = 200
 
 
-def inspect_input_folder(path_str: str) -> dict:
+def inspect_input_folder(path_str: str, lang: str | None = None) -> dict:
+    t = i18n.make_t(lang)
     result = {
         "path": path_str,
         "ok": False,
@@ -30,23 +33,23 @@ def inspect_input_folder(path_str: str) -> dict:
     }
 
     if not path_str:
-        result["errors"].append("Cesta nesmí být prázdná.")
+        result["errors"].append(t("errors.path_empty"))
         return result
 
     base = Path(path_str).expanduser()
     if not base.is_dir():
-        result["errors"].append(f"Složka neexistuje: {base}")
+        result["errors"].append(t("errors.folder_not_found").format(path=base))
         return result
 
     images_dir = base / "images"
     if not images_dir.is_dir():
-        result["errors"].append("Chybí podsložka 'images'.")
+        result["errors"].append(t("errors.missing_images_subfolder"))
     else:
         images = [p for p in images_dir.iterdir() if p.suffix.lower() in IMAGE_EXTENSIONS]
         result["images_dir"] = str(images_dir)
         result["images_count"] = len(images)
         if not images:
-            result["errors"].append("Ve složce 'images' nejsou žádné obrázky.")
+            result["errors"].append(t("errors.no_images_in_folder"))
 
     alto_dir = base / "alto_xmls"
     if alto_dir.is_dir():
@@ -62,7 +65,7 @@ def inspect_input_folder(path_str: str) -> dict:
                 data = json.load(f)
             result["metadata_count"] = len(data) if isinstance(data, dict) else None
         except (json.JSONDecodeError, OSError) as exc:
-            result["errors"].append(f"metadata.json se nepodařilo načíst: {exc}")
+            result["errors"].append(t("errors.metadata_load_failed").format(exc=exc))
 
     result["ok"] = not result["errors"]
     return result

@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}AnnoPage runner{% endblock %}</title>
+    <title>{% block title %}{{ t('brand') }}{% endblock %}</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <nav class="topnav">
-        <a href="/" class="brand">AnnoPage runner</a>
-        <a href="/">Nová úloha</a>
-        <a href="/jobs">Historie</a>
-        <a href="/settings">Nastavení</a>
+        <a href="/" class="brand">{{ t('brand') }}</a>
+        <a href="/">{{ t('nav.new_job') }}</a>
+        <a href="/jobs">{{ t('nav.history') }}</a>
+        <a href="/settings">{{ t('nav.settings') }}</a>
+        <span class="lang-switch">
+            <a href="/set-lang/cs" class="{{ 'active' if lang == 'cs' else '' }}">CS</a>
+            <a href="/set-lang/en" class="{{ 'active' if lang == 'en' else '' }}">EN</a>
+        </span>
     </nav>
     <main>
         {% block content %}{% endblock %}
     </main>
+    <script>window.I18N = {{ i18n_json|safe }}; window.LANG = {{ lang|tojson }};</script>
     <script src="/static/app.js"></script>
     {% block scripts %}{% endblock %}
 </body>

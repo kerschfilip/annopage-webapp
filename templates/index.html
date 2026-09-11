@@ -1,58 +1,58 @@
 {% extends "base.html" %}
-{% block title %}Nová úloha – AnnoPage runner{% endblock %}
+{% block title %}{{ t('new_job.title') }} – {{ t('brand') }}{% endblock %}
 {% block content %}
-<h1>Nová úloha</h1>
+<h1>{{ t('new_job.title') }}</h1>
 
 {% if not targets %}
-<p class="notice">Nemáte žádný uložený target. <a href="/settings">Přidejte ho v nastavení</a> předtím, než spustíte úlohu.</p>
+<p class="notice">{{ t('new_job.no_target_pre') }} <a href="/settings">{{ t('new_job.no_target_link') }}</a> {{ t('new_job.no_target_post') }}</p>
 {% endif %}
 
 <form id="job-form">
     <fieldset>
-        <legend>Vstupní složka</legend>
+        <legend>{{ t('new_job.input_folder_legend') }}</legend>
         <div id="input-picker"></div>
         <label>
-            Cesta ke složce s podsložkami <code>images/</code>, volitelně <code>alto_xmls/</code> a <code>metadata.json</code>
+            {{ t('new_job.input_folder_label')|safe }}
             <input type="text" id="input_path" name="input_path" placeholder="/data/klient/20260611-test/input" required>
         </label>
-        <button type="button" id="inspect-btn">Ověřit obsah</button>
+        <button type="button" id="inspect-btn">{{ t('new_job.inspect_btn') }}</button>
         <div id="inspect-result"></div>
     </fieldset>
 
     <fieldset>
-        <legend>Target</legend>
+        <legend>{{ t('new_job.target_legend') }}</legend>
         <label>
-            Cílová instance
+            {{ t('new_job.target_label') }}
             <select id="target_id" name="target_id" required>
-                <option value="" disabled selected>-- vyberte --</option>
-                {% for t in targets %}
-                <option value="{{ t.id }}">{{ t.label }} ({{ t.api_url }})</option>
+                <option value="" disabled selected>{{ t('common.select_placeholder') }}</option>
+                {% for tg in targets %}
+                <option value="{{ tg.id }}">{{ tg.label }} ({{ tg.api_url }})</option>
                 {% endfor %}
             </select>
         </label>
         <label>
-            Engine (nepovinné, jinak výchozí)
+            {{ t('new_job.engine_label') }}
             <select id="engine_name" name="engine_name">
-                <option value="">-- výchozí --</option>
+                <option value="">{{ t('common.default_placeholder') }}</option>
             </select>
         </label>
         <p id="engine-description" class="notice" style="display:none"></p>
     </fieldset>
 
     <fieldset>
-        <legend>Výstupy</legend>
+        <legend>{{ t('new_job.outputs_legend') }}</legend>
         <label><input type="checkbox" name="output_alto" checked> ALTO XML</label>
         <label><input type="checkbox" name="output_embeddings" checked> Embeddings</label>
         <label><input type="checkbox" name="output_embeddings_jsonlines"> Embeddings (JSONL)</label>
         <label><input type="checkbox" name="output_renders" checked> Renders</label>
         <label><input type="checkbox" name="output_crops" checked> Crops</label>
-        <label><input type="checkbox" name="output_image_captioning_prompts"> Captioning prompty</label>
+        <label><input type="checkbox" name="output_image_captioning_prompts"> {{ t('new_job.output_captioning_prompts') }}</label>
     </fieldset>
 
     <fieldset>
-        <legend>Captioning profil (nepovinné)</legend>
+        <legend>{{ t('new_job.captioning_profile_legend') }}</legend>
         <select id="captioning_profile_id" name="captioning_profile_id">
-            <option value="">-- žádný --</option>
+            <option value="">{{ t('common.none_placeholder') }}</option>
             {% for p in profiles %}
             <option value="{{ p.id }}">{{ p.label }}</option>
             {% endfor %}
@@ -60,14 +60,14 @@
     </fieldset>
 
     <fieldset>
-        <legend>Výstupní složka (nepovinné)</legend>
+        <legend>{{ t('new_job.output_folder_legend') }}</legend>
         <label>
-            Necháte-li prázdné, výstup se uloží do vlastního úložiště appky.
+            {{ t('new_job.output_folder_label') }}
             <input type="text" id="output_path" name="output_path" placeholder="/Users/.../output/runs/...">
         </label>
     </fieldset>
 
-    <button type="submit">Spustit úlohu</button>
+    <button type="submit">{{ t('new_job.submit_btn') }}</button>
 </form>
 {% endblock %}
 {% block scripts %}<script src="/static/new_job.js"></script>{% endblock %}

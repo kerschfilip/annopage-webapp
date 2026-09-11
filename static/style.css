@@ -25,6 +25,22 @@ body {
     margin-right: auto;
 }
 
+.lang-switch {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.lang-switch a {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.lang-switch a.active {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
 fieldset {
     border: 1px solid var(--border);
     border-radius: 6px;
