@@ -231,6 +231,18 @@ def list_jobs() -> list[dict]:
     return jobs
 
 
+def read_processing_info(job: dict) -> dict | None:
+    """Reads <output_dir>/processing_info.json, written by the `annopage` CLI
+    (AnnoPage/api/worker.py passes --output-processing-info-path) and bundled
+    into every job's result.zip alongside alto/embeddings/etc. Returns None
+    if the job's output dir doesn't have one yet (older jobs, or job not
+    finished)."""
+    output_dir = job.get("output_dir")
+    if not output_dir:
+        return None
+    return _read_json(Path(output_dir) / "processing_info.json", None)
+
+
 def update_job(job_id: str, **changes) -> dict | None:
     with _lock:
         job = _read_json(job_file(job_id), None)

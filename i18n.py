@@ -65,6 +65,10 @@ TRANSLATIONS = {
         "job_detail.state_colon": "Stav:",
         "job_detail.download": "Stáhnout výstup (zip)",
         "job_detail.log_summary": "Log (posledních 5 řádků)",
+        "job_detail.processing_info_summary": "Zpracování (LLM usage / chyby)",
+        "job_detail.processing_info_empty": "Žádné LLM zpracování ani chyby nebyly zaznamenány.",
+        "job_detail.usage_engine": "Engine",
+        "job_detail.usage_total_row": "Celkem",
 
         "settings.title": "Nastavení",
         "settings.targets_heading": "Targety",
@@ -160,6 +164,10 @@ TRANSLATIONS = {
         "job_detail.state_colon": "State:",
         "job_detail.download": "Download output (zip)",
         "job_detail.log_summary": "Log (last 5 lines)",
+        "job_detail.processing_info_summary": "Processing info (LLM usage / errors)",
+        "job_detail.processing_info_empty": "No LLM usage or errors were recorded.",
+        "job_detail.usage_engine": "Engine",
+        "job_detail.usage_total_row": "Total",
 
         "settings.title": "Settings",
         "settings.targets_heading": "Targets",

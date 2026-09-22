@@ -16,7 +16,7 @@ import threading
 import llm_aliases
 import store
 
-STATUS_RE = re.compile(r"^Job status: (\w+), progress: ([\d.]+)")
+STATUS_RE = re.compile(r"^Job status: (?:\w+\.)?(\w+), progress: ([\d.]+)")
 CREATED_RE = re.compile(r"^Job (\S+) created$")
 
 OUTPUT_FLAGS = {

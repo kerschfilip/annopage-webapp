@@ -15,6 +15,15 @@
         <summary>{{ t('job_detail.log_summary') }}</summary>
         <pre id="job-log"></pre>
     </details>
+    <details id="processing-info-details" style="display:none">
+        <summary>{{ t('job_detail.processing_info_summary') }}</summary>
+        <p id="processing-info-empty" style="display:none">{{ t('job_detail.processing_info_empty') }}</p>
+        <div id="processing-info-errors"></div>
+        <table id="processing-info-usage" style="display:none">
+            <thead id="processing-info-usage-head"></thead>
+            <tbody id="processing-info-usage-body"></tbody>
+        </table>
+    </details>
 </div>
 {% endblock %}
 {% block scripts %}<script src="/static/job_detail.js"></script>{% endblock %}

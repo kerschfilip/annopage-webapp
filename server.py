@@ -240,6 +240,21 @@ def api_job_log(job_id: str, request: Request, lines: int = 5):
     return {"log": store.tail_log(job_id, lines)}
 
 
+@app.get("/api/jobs/{job_id}/processing-info")
+def api_job_processing_info(job_id: str, request: Request):
+    job = store.get_job(job_id)
+    if job is None:
+        raise HTTPException(404, i18n.make_t(get_lang(request))("errors.job_not_found"))
+    info = store.read_processing_info(job)
+    if info is None:
+        return {"available": False}
+    return {
+        "available": True,
+        "errors": info.get("errors", {}),
+        "llm_usage": info.get("llm_usage", {}),
+    }
+
+
 @app.get("/api/jobs/{job_id}/download")
 def api_job_download(job_id: str, request: Request):
     job = store.get_job(job_id)
